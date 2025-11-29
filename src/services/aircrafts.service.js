@@ -20,8 +20,6 @@ class AircraftsService {
         const removedAircraft = await this.model.deleteAircrafts(identifier);
         return removedAircraft
     };
-
-
 }
 
 export default AircraftsService;

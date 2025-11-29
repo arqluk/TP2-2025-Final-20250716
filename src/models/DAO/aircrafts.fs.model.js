@@ -19,27 +19,35 @@ class AircraftsFsModel {
     };
 
     getAllAircrafts = async () => {
-        const aircraftsJs = await fs.promises.readFile(this.filePath, "utf-8");
-        return JSON.parse(aircraftsJs);
+        const aircrafts = await fs.promises.readFile(this.filePath, "utf-8");
+        return JSON.parse(aircrafts);
     };
 
     postAircrafts = async (aircraft) => {
         const aircrafts = await fs.promises.readFile(this.filePath, "utf-8");
         let aircraftsJs = JSON.parse(aircrafts)
-        
-        const {id, xa, ya, za} = aircraft
+
+        const { id, xa, ya, za } = aircraft
         const index = aircraftsJs.findIndex((a) => a.id == id)
-        const collisions = this.checkCollisions(aircraft)
+        const collisions = await this.checkCollisions(aircraft)
         if (index === -1) {
-            aircraftsJs.push({id, xa, ya, za})
+            aircraftsJs.push({ id, xa, ya, za })
         } else {
-            aircraftsJs[index] = {id, xa, ya, za}
+            // aircraftsJs[index] = {id, xa, ya, za}
+
+            aircraftsJs[index] = {
+                ...aircraftsJs[index], // conserva propiedades previas
+                id,
+                xa,
+                ya,
+                za
+            };
         }
 
-        await fs.promises.writeFile(aircrafts, JSON.stringify(entitiesJs, null, 2))
+        await fs.promises.writeFile(this.filePath, JSON.stringify(aircraftsJs, null, 2))
 
         return {
-            aircraft: {id, xa, ya, za},
+            aircraft: { id, xa, ya, za },
             collisions: collisions
         }
     };
@@ -54,17 +62,19 @@ class AircraftsFsModel {
         }
         else {
             aircraftsJs.splice(index, 1)
-            await fs.promises.writeFile(aircrafts, JSON.stringify(entitiesJs, null, 2))
+            await fs.promises.writeFile(this.filePath, JSON.stringify(aircraftsJs, null, 2))
             msg = "Aircratf removed ok."
         }
         return msg
     };
 
-    checkCollisions = (newAircraft) => {
+    checkCollisions = async (newAircraft) => {
+        const aircrafts = await fs.promises.readFile(this.filePath, "utf-8");
+        let aircraftsJs = JSON.parse(aircrafts)
         const collisionsIds = []
 
-        if (this.aircrafts.length !== 0) {
-            for (const aircraft of this.aircrafts) {
+        if (aircraftsJs.length !== 0) {
+            for (const aircraft of aircraftsJs) {
                 if (aircraft.id === newAircraft.id) {
                     continue
                 }
