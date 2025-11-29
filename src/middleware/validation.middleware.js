@@ -13,24 +13,6 @@ import Joi from "joi";
 //     return res.status(400).json({ error: `El id debe ser ...` });
 // };
 
-// const validateId = (req, res, next) => {
-//     const { id } = req.body;
-
-
-//     // const regex = /^[A-Z]{3}\d{3}$/;
-//     const aircraftIdSchema = Joi.object({
-//         id: Joi.string()
-//             .pattern(/^[A-Z]{3}\d{3}$/)
-//             .required()
-//     })
-
-//     // validate -> es propia de Joi y valida el dato que yo le pase
-//     const { error } = aircraftIdSchema.validate(aircraft)
-//     // Devuelve true si hay error, false si está OK
-//     return error ? true : false;
-
-// };
-
 const validateId = (req, res, next) => {
     console.log("DEBUG validateId - req.body:", req.body);
   console.log("DEBUG validateId - id:", typeof req.body.id, `"${req.body.id}"`);
@@ -67,25 +49,6 @@ const validateId = (req, res, next) => {
 
 // };
 
-
-
-
-// const validateCoordinates = (req, res, next) => {
-//     const { xa, ya, za } = req.body;
-
-//     if (
-//         typeof xa === "number" && !isNaN(xa) &&
-//         typeof ya === "number" && !isNaN(ya) &&
-//         typeof za === "number" && !isNaN(za)
-//     ) {
-//         return next();
-//     }
-    
-//     return res.status(400).json({
-//         error: "xa, ya y za deben ser números.",
-//     });
-    
-// }
 
 const validateCoordinates = (req, res, next) => {
     const { xa, ya, za } = req.body;
